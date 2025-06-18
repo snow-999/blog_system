@@ -10,13 +10,14 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -24,23 +25,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserModel register(UserModel userModel) {
-        return null;
+        UserEntity user = userConverter.convertUserModelToEntity(userModel);
+        user = userRepository.save(user);
+        userModel = userConverter.convertUserEntityTOModel(user);
+        return userModel;
     }
 
     @Override
     public UserModel login(String email, String password) {
         return null;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> user = userRepository.findUserByUserName(username);
-        if (user.isPresent()) {
-            var userObj = user.get();
-            return User.builder()
-                    .username(userObj.getUserName()).password(userObj.getPassword()).build();
-        } else {
-            throw new UsernameNotFoundException(username);
-        }
     }
 }
