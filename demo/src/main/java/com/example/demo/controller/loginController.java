@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1")
-public class HelloController {
-    @GetMapping("hello")
-    public String sayHello() {
-        return "hello";
+public class loginController {
+    @GetMapping("login")
+    public String login() {
+        return "Welcome To Login Page";
     }
 }
