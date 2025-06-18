@@ -16,11 +16,8 @@ public class loginController {
     @Autowired
     protected UserConverter userConverter;
 
-    @PostMapping("login")
-    public UserModel login(@RequestBody UserModel userModel) {
-        UserEntity user = userConverter.convertUserModelToEntity(userModel);
-        user = userRepository.save(user);
-        userModel = userConverter.convertUserEntityTOModel(user);
-        return userModel;
+    @GetMapping("login")
+    public String login() {
+        return "my user loggedin";
     }
 }
