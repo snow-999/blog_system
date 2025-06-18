@@ -15,7 +15,7 @@ public class UserConverter {
         user.setId(userModel.getId());
         return user;
     }
-    
+
     public UserModel convertUserEntityTOModel(UserEntity userEntity) {
         UserModel model = new UserModel();
         model.setEmail(userEntity.getEmail());
