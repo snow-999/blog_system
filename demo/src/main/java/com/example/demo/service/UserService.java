@@ -4,5 +4,5 @@ import com.example.demo.model.UserModel;
 
 public interface UserService {
     UserModel register(UserModel userModel);
-    UserModel login(String email, String password);
+    UserModel login(UserModel userModel) throws Exception;
 }

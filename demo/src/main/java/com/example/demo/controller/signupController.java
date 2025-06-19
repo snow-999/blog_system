@@ -29,10 +29,11 @@ public class signupController {
 
     @PostMapping("signup")
     public ResponseEntity<UserModel> register(@RequestBody UserModel userModel) {
-        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
         userModel = userService.register(userModel);
         return new ResponseEntity<>(userModel, HttpStatus.CREATED);
     }
+
+
 
 
 }
