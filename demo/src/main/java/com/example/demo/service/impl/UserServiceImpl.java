@@ -4,8 +4,14 @@ import com.example.demo.converter.UserConverter;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.model.UserModel;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.JWTService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.boot.autoconfigure.pulsar.PulsarProperties;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +21,16 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    UserConverter userConverter;
+    private UserConverter userConverter;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager manager;
+    @Autowired
+    private JWTService jwtService;
+
 
     @Override
     public UserModel register(UserModel userModel) {
@@ -43,5 +54,16 @@ public class UserServiceImpl implements UserService {
             throw new Exception("user not found");
         }
         return null;
+    }
+
+    @Override
+    public String verify(UserModel userModel) {
+        Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(userModel.getUserName(), userModel.getPassword()));
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(userModel.getUserName());
+        }
+        else {
+            return "fail";
+        }
     }
 }

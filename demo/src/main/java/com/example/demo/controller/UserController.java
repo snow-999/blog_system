@@ -38,4 +38,9 @@ public class UserController {
         userModel = userService.login(userModel);
         return new ResponseEntity<>(userModel, HttpStatus.OK);
     }
+
+    @PostMapping("verify")
+    public String greatMe (@RequestBody UserModel userModel) {
+        return userService.verify(userModel);
+    }
 }
