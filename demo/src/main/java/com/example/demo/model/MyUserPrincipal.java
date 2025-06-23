@@ -11,10 +11,14 @@ import java.util.Collections;
 
 public class MyUserPrincipal implements UserDetails {
 
-    UserEntity user = new UserEntity();
+    UserModel user;
 
-    public MyUserPrincipal(UserEntity userEntity) {
-        this.user = userEntity;
+    public MyUserPrincipal(UserModel userModel) {
+        this.user = userModel;
+    }
+
+    public UserModel getUserModel() {
+        return user;
     }
 
 

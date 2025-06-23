@@ -4,6 +4,7 @@ import com.example.demo.converter.UserConverter;
 import com.example.demo.model.UserModel;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("http://localhost:4200/")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -25,7 +26,6 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
 
     @PostMapping("signup")
     public ResponseEntity<UserModel> register(@RequestBody UserModel userModel) {
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("verify")
-    public String greatMe (@RequestBody UserModel userModel) {
-        return userService.verify(userModel);
+    public String greatMe (@RequestBody UserModel userModel, HttpServletResponse response) {
+        return userService.verify(userModel, response);
     }
 }
