@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Setter
 @Getter
-@Entity
+@Entity(name = "posts")
 public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
