@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.converter.UserConverter;
+import com.example.demo.model.LogInToken;
 import com.example.demo.model.UserModel;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("verify")
-    public String greatMe (@RequestBody UserModel userModel, HttpServletResponse response) {
+    public LogInToken greatMe (@RequestBody UserModel userModel, HttpServletResponse response) {
         return userService.verify(userModel, response);
     }
 }

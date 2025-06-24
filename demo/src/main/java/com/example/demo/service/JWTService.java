@@ -2,15 +2,15 @@ package com.example.demo.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.websocket.Decoder;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
@@ -21,18 +21,22 @@ import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private String secretKey = "";
+    public static final int DAYS = 7;
+    public static final int HOURS = 24;
+    public static final int MINUTES = 60;
+    public static final int SECONDS = 60;
+    @Value("${jwt.secret}")
+    private String secretKey;
 
     public JWTService() {
         try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("hmacSHA256");
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
             SecretKey key = keyGenerator.generateKey();
             secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     public String generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
@@ -44,11 +48,12 @@ public class JWTService {
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 60 *60 * 60))
                 .and()
-                .signWith(getKey()).compact();
+                .signWith(getKey())
+                .compact();
     }
 
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -80,5 +85,14 @@ public class JWTService {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+    public void addJwtToCookie(String token, HttpServletResponse response) {
+        Cookie jwtCookie = new Cookie("JWT_TOKEN", token);
+        jwtCookie.setHttpOnly(false);
+        jwtCookie.setSecure(false); // Set to true for production over HTTPS
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(DAYS * HOURS * MINUTES * SECONDS); // 7 days in seconds
+
+        response.addCookie(jwtCookie);
     }
 }
