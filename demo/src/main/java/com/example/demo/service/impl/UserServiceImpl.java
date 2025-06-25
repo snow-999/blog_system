@@ -44,28 +44,17 @@ public class UserServiceImpl implements UserService {
         userModel = userConverter.convertUserEntityTOModel(user);
         return userModel;
     }
+    
 
     @Override
-    public UserModel login(UserModel userModel) throws Exception {
-        UserModel model = new UserModel();
-        Optional<UserEntity> user = userRepository.findByEmail(userModel.getEmail());
-        if (user.isPresent()) {
-            model = userConverter.convertUserEntityTOModel(user.get());
-            if (passwordEncoder.matches(userModel.getPassword(), model.getPassword())) {
-                return model;
-            }
-        } else {
-            throw new Exception("user not found");
-        }
-        return null;
-    }
-
-    @Override
-    public LogInToken verify(UserModel userModel, HttpServletResponse response) {
+    public LogInToken login(UserModel userModel, HttpServletResponse response) {
         Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(userModel.getUserName(), userModel.getPassword()));
         if (authentication.isAuthenticated()) {
+            UserEntity entity = userRepository.findByUserName(userModel.getUserName());
+            userModel = userConverter.convertUserEntityTOModel(entity);
             LogInToken token = new LogInToken();
-            token.setToken(jwtService.generateToken(userModel.getUserName()));
+            System.out.println(userModel);
+            token.setToken(jwtService.generateToken(userModel));
             jwtService.addJwtToCookie(token.getToken(),response);
             return token;
         }

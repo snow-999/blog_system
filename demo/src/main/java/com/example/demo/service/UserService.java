@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserService {
     UserModel register(UserModel userModel);
-    UserModel login(UserModel userModel) throws Exception;
-    LogInToken verify(UserModel userModel, HttpServletResponse response);
+//    UserModel login(UserModel userModel) throws Exception;
+    LogInToken login(UserModel userModel, HttpServletResponse response);
 
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.model.UserModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -38,13 +39,13 @@ public class JWTService {
         }
     }
 
-    public String generateToken(String userName) {
+    public String generateToken(UserModel userModel) {
         Map<String, Object> claims = new HashMap<>();
-
+        claims.put("userId", userModel.getId());
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .subject(userName)
+                .subject(userModel.getUserName())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 60 *60 * 60))
                 .and()
