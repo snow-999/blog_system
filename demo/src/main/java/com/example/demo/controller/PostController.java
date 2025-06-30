@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.PostModel;
 import com.example.demo.service.PostService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,23 @@ public class PostController {
     public ResponseEntity<List<PostModel>> getAllPosts() {
         List<PostModel> posts = postService.getAllPosts();
         return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("post/user/{userId}")
+    public ResponseEntity<List<PostModel>> getUserPosts(@PathVariable Long userId) {
+        List<PostModel> posts = postService.getUserPosts(userId);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @DeleteMapping("post/{postId}")
+    public ResponseEntity<PostModel> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("post/{postId}")
+    public ResponseEntity<PostModel> updatePost(@RequestBody PostModel postModel ,@PathVariable Long postId) {
+        postModel = postService.updatePost(postModel, postId);
+        return new ResponseEntity<>(postModel, HttpStatus.OK);
     }
 }
