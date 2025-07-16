@@ -34,14 +34,8 @@ public class UserController {
         return new ResponseEntity<>(userModel, HttpStatus.CREATED);
     }
 
-//    @PostMapping("login")
-//    public ResponseEntity<UserModel> login(@RequestBody UserModel userModel) throws Exception {
-//        userModel = userService.login(userModel);
-//        return new ResponseEntity<>(userModel, HttpStatus.OK);
-//    }
-
     @PostMapping("login")
     public LogInToken greatMe (@RequestBody UserModel userModel, HttpServletResponse response) {
-        return userService.login(userModel, response);
+            return userService.login(userModel, response);
     }
 }

@@ -3,7 +3,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.PostModel;
 import com.example.demo.service.PostService;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +45,9 @@ public class PostController {
     @PutMapping("post/{postId}")
     public ResponseEntity<PostModel> updatePost(@RequestBody PostModel postModel ,@PathVariable Long postId) {
         postModel = postService.updatePost(postModel, postId);
+        if (postModel == null) {
+            return new ResponseEntity<>(postModel, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(postModel, HttpStatus.OK);
     }
 }

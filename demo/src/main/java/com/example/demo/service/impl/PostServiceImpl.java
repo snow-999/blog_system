@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.converter.PostConverter;
 import com.example.demo.entity.PostEntity;
+import com.example.demo.exceptions.PostNotFoundException;
 import com.example.demo.model.PostModel;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.service.PostService;
@@ -34,46 +35,38 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostModel> getAllPosts() {
         List<PostEntity> postEntities = (List<PostEntity>) postRepository.findAll();
-        List<PostModel>  postModels = new ArrayList<>();
-        for (PostEntity postEntity : postEntities) {
-            PostModel model = postConverter.convertPostEntityToModel(postEntity);
-            postModels.add(model);
-        }
-        return postModels;
+        return postEntities.stream().map(postConverter::convertPostEntityToModel).toList();
     }
 
     @Override
     public List<PostModel> getUserPosts(Long userId) {
         List<PostEntity> postEntities = postRepository.findByUserId(userId);
-        List<PostModel>  postModels = new ArrayList<>();
-        for (PostEntity postEntity: postEntities) {
-            PostModel model = postConverter.convertPostEntityToModel(postEntity);
-            postModels.add(model);
-        }
-        return postModels;
+        return postEntities.stream().map(postConverter::convertPostEntityToModel).toList();
     }
 
     @Override
     public void deletePost(Long postId) {
+        boolean exit = postRepository.existsById(postId);
+        if (!exit) {
+            throw new PostNotFoundException("post not found");
+        }
         postRepository.deleteById(postId);
     }
 
     @Override
-    public PostModel updatePost(PostModel model, Long postId) {
+    public PostModel updatePost(PostModel model, Long postId)  {
         Optional<PostEntity> entity = postRepository.findById(postId);
-        PostModel postModel = new PostModel();
         if (entity.isPresent()) {
-
             PostEntity postEntity = entity.get();
             System.out.println(postEntity);
-
             postEntity.setContent(model.getContent());
             postEntity.setTitle(model.getTitle());
             postEntity.setDate(model.getDate());
-            postEntity.setEdited(model.isEdited());
-            postModel = postConverter.convertPostEntityToModel(postEntity);
+            PostModel postModel = postConverter.convertPostEntityToModel(postEntity);
             postRepository.save(postEntity);
+            return postModel;
+        } else {
+            throw new PostNotFoundException("post not found");
         }
-        return postModel;
     }
 }
