@@ -19,4 +19,9 @@ public class PostEntity {
     private String content;
     private String title;
     private Date date;
+
+    @Override
+    public String toString() {
+        return "id: " + getPostId() + " title: " + getTitle()  + " content: " + getContent();
+    }
 }

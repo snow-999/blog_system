@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostModel> getAllPosts() {
-        List<PostEntity> postEntities = (List<PostEntity>) postRepository.findAll();
+        List<PostEntity> postEntities = postRepository.findAll();
         return postEntities.stream().map(postConverter::convertPostEntityToModel).toList();
     }
 

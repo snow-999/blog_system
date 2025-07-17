@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ControlAdviser {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorModel> handleIllegalArgumentException(IllegalArgumentException ex) {
-        ErrorModel errorModel = new ErrorModel("Error: argument is missing");
+        ErrorModel errorModel = new ErrorModel(ex.getMessage());
         return new ResponseEntity<>(errorModel ,  HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<ErrorModel> handlePostNotFoundException(PostNotFoundException ex) {
-        ErrorModel errorModel = new ErrorModel("Error: post Not Found");
+        ErrorModel errorModel = new ErrorModel(ex.getMessage());
         return new ResponseEntity<>( errorModel,  HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(PageNotFoundException.class)
     public ResponseEntity<ErrorModel> handlePageNotFoundException(PageNotFoundException ex) {
-        ErrorModel errorModel = new ErrorModel("Error: page Not Found");
+        ErrorModel errorModel = new ErrorModel(ex.getMessage());
         return new ResponseEntity<>( errorModel,  HttpStatus.NOT_FOUND);
     }
 }
