@@ -7,16 +7,15 @@ import com.example.demo.exceptions.PostNotFoundException;
 import com.example.demo.model.PostModel;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.service.PostService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Service
 public class PostServiceImpl implements PostService {
     @Autowired
@@ -36,6 +35,13 @@ public class PostServiceImpl implements PostService {
     public List<PostModel> getAllPosts() {
         List<PostEntity> postEntities = (List<PostEntity>) postRepository.findAll();
         return postEntities.stream().map(postConverter::convertPostEntityToModel).toList();
+    }
+
+    @Override
+    public Page<PostModel> getGroupOfPosts(int size, int page) {
+        Pageable pageable = PageRequest.of(page, size);
+        return postRepository.findAll(pageable)
+                .map(postConverter::convertPostEntityToModel);
     }
 
     @Override

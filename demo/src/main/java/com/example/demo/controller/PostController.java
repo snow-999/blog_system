@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import com.example.demo.model.PostModel;
 import com.example.demo.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,16 @@ public class PostController {
     @GetMapping("posts")
     public ResponseEntity<List<PostModel>> getAllPosts() {
         List<PostModel> posts = postService.getAllPosts();
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
+    @GetMapping("pages")
+    public ResponseEntity<Page<PostModel>> getPosts(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size)
+    {
+        Page<PostModel> posts = postService.getGroupOfPosts(size, page);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
