@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.converter.PostConverter;
 import com.example.demo.entity.PostEntity;
+import com.example.demo.exceptions.PageNotFoundException;
 import com.example.demo.exceptions.PostNotFoundException;
 import com.example.demo.model.PostModel;
 import com.example.demo.repository.PostRepository;
@@ -39,7 +40,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostModel> getGroupOfPosts(int size, int page) {
-        Pageable pageable = PageRequest.of(page, size);
+        long postsCount = postRepository.count();
+        long pages = postsCount/size;
+        if (page - 1 > pages || page <= 0 || postsCount < size) {
+            throw new PageNotFoundException("page not found");
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
         return postRepository.findAll(pageable)
                 .map(postConverter::convertPostEntityToModel);
     }

@@ -1,5 +1,6 @@
 package com.example.demo.control_adviser;
 
+import com.example.demo.exceptions.PageNotFoundException;
 import com.example.demo.exceptions.PostNotFoundException;
 import com.example.demo.model.ErrorModel;
 import org.hibernate.query.sqm.tree.expression.SqmHqlNumericLiteral;
@@ -21,6 +22,12 @@ public class ControlAdviser {
     @ExceptionHandler(PostNotFoundException.class)
     public ResponseEntity<ErrorModel> handlePostNotFoundException(PostNotFoundException ex) {
         ErrorModel errorModel = new ErrorModel("Error: post Not Found");
+        return new ResponseEntity<>( errorModel,  HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PageNotFoundException.class)
+    public ResponseEntity<ErrorModel> handlePageNotFoundException(PageNotFoundException ex) {
+        ErrorModel errorModel = new ErrorModel("Error: page Not Found");
         return new ResponseEntity<>( errorModel,  HttpStatus.NOT_FOUND);
     }
 }
