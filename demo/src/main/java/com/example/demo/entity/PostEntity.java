@@ -22,6 +22,6 @@ public class PostEntity {
 
     @Override
     public String toString() {
-        return "id: " + getPostId() + " title: " + getTitle()  + " content: " + getContent();
+        return "id: %d title: %s content: %s date: %s post made by user who his id is: %d".formatted(getPostId(), getTitle(), getContent(), getDate(), getUserId());
     }
 }

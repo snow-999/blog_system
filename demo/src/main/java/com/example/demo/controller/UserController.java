@@ -16,14 +16,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1")
 @CrossOrigin("http://localhost:4200/")
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private UserConverter userConverter;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

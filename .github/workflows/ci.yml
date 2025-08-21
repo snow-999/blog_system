@@ -1,0 +1,44 @@
+image: dockerproxy.repos.tech.orange/maven:3.9.7-eclipse-temurin-21
+stages:
+  - build
+  - test
+  - package
+  - deploy
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+before_script:
+  - echo "Starting CI pipeline for Java project"
+  - apt-get update && apt-get install -y openjdk-11-jdk  # Install JDK if needed
+  - java -version
+  - mvn -version
+
+build_job:
+  stage: build
+  script:
+    - mvn compile
+  artifacts:
+    paths:
+      - target/
+
+test_job:
+  stage: test
+  script:
+    - mvn test
+
+package_job:
+  stage: package
+  script:
+    - mvn package
+  artifacts:
+    paths:
+      - target/*.jar
+
+deploy_job:
+  stage: deploy
+  script: echo "Deploy The Project"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never

@@ -21,7 +21,6 @@ class SecondSpringAppApplicationTests {
 	@Autowired
 	private PostRepository postRepository;
 
-
 	@Test
 	void contextLoads() {
 		System.out.println("tested");
@@ -33,8 +32,7 @@ class SecondSpringAppApplicationTests {
 		Optional<PostEntity> postEntity = postRepository.findById(id);
 		if (postEntity.isPresent()) {
 			PostEntity post = postEntity.get();
-			System.out.println(post.toString());
+			System.out.println(post);
 		}
-
 	}
 }
