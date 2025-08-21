@@ -17,7 +17,7 @@ public class MyUserPrincipal implements UserDetails {
         this.user = userModel;
     }
 
-    public UserModel getUserModel() {
+    public UserModel getuser() {
         return user;
     }
 
